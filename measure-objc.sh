@@ -6,6 +6,7 @@
 
 MAX=50
 
+mkdir -p objc
 dart generate-objc.dart 0 ${MAX} objc/test%i.m
 
 function compile() {
