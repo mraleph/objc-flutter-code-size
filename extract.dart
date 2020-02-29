@@ -44,8 +44,8 @@ Future<FileInfo> getSizes(String fileName) async {
   return FileInfo(fileSize, sectionsSize);
 }
 
-void main() async {
-  final N = 50;
+void main(List<String> args) async {
+  final N = int.parse(args.first);
   Future<List<FileInfo>> collectInfo(String pattern) async {
     return Stream.fromIterable(
             List.generate(N+1, (i) => pattern.replaceAll('%i', i.toString())))
