@@ -60,7 +60,13 @@ void main() async {
     print('$i,${objcInfo[i]},${flutterInfo[i]}');
   }
 
+  print('''
+| # added copies  | ObjC Mach-O growth | ObjC Sections growth | Flutter Mach-O growth | Flutter Sections growth |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+''');
   for (var i = 1; i <= N; i++) {
-    print('$i,${objcInfo[i]-objcInfo[i-1]},${flutterInfo[i]-flutterInfo[i-1]}');
+    final objc = objcInfo[i]-objcInfo[i-1];
+    final flutter = flutterInfo[i]-flutterInfo[i-1];
+    print('|$i|${objc.toString().replaceAll(',', '|')}|${flutter.toString().replaceAll(',','|')}|');
   }
 }
