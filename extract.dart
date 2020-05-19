@@ -19,7 +19,8 @@ Future<int> totalSectionSize(String file) async {
 
   var totalSize = 0;
   for (var s in sections) {
-    final info = s.trim().split(whitespace);
+    final info = s.trim().split(whitespace).where((s) => !s.isEmpty).toList();
+    if (info.isEmpty) continue;
     final size = int.parse(info[2], radix: 16);
     totalSize += size;
   }
