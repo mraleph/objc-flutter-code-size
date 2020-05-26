@@ -19,7 +19,8 @@ Future<int> totalSectionSize(String file) async {
 
   var totalSize = 0;
   for (var s in sections) {
-    final info = s.trim().split(whitespace);
+    final info = s.trim().split(whitespace).where((s) => !s.isEmpty).toList();
+    if (info.isEmpty) continue;
     final size = int.parse(info[2], radix: 16);
     totalSize += size;
   }
@@ -54,19 +55,25 @@ void main(List<String> args) async {
   }
 
   final objcInfo = await collectInfo('objc/test%i');
-  final flutterInfo = await collectInfo('flutter_project/App-ARM64.%i');
+  final flutterInfoDefault = await
+      collectInfo('flutter_project/App-ARM64-default.%i');
+  final flutterInfoSizeopt = await
+      collectInfo('flutter_project/App-ARM64-sizeopt.%i');
 
   for (var i = 0; i <= N; i++) {
-    print('$i,${objcInfo[i]},${flutterInfo[i]}');
+    print('$i,${objcInfo[i]},${flutterInfoDefault[i]},${flutterInfoSizeopt[i]}');
   }
 
   print('''
-| # added copies  | ObjC Mach-O growth | ObjC Sections growth | Flutter Mach-O growth | Flutter Sections growth |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
+| # added copies  | ObjC Mach-O growth | ObjC Sections growth | Flutter Default Mach-O growth | Flutter Default Sections growth | Flutter SizeOpt Mach-O growth | Flutter SizeOpt Sections growth |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
 ''');
   for (var i = 1; i <= N; i++) {
     final objc = objcInfo[i]-objcInfo[i-1];
-    final flutter = flutterInfo[i]-flutterInfo[i-1];
-    print('|$i|${objc.toString().replaceAll(',', '|')}|${flutter.toString().replaceAll(',','|')}|');
+    final flutterDefault = flutterInfoDefault[i]-flutterInfoDefault[i-1];
+    final flutterSizeopt = flutterInfoSizeopt[i]-flutterInfoSizeopt[i-1];
+    print('|$i|${objc.toString().replaceAll(',', '|')}|'
+          '${flutterDefault.toString().replaceAll(',','|')}|'
+          '${flutterSizeopt.toString().replaceAll(',','|')}|');
   }
 }
