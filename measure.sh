@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 N=$1
 
 echo "Generating data for Flutter"
