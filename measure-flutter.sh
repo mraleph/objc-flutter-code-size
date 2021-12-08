@@ -4,6 +4,8 @@
 # for details. All rights reserved. Use of this source code is governed by a
 # BSD-style license that can be found in the LICENSE file.
 
+set -e
+
 MAX=$1
 
 dart generate-dart.dart 0 ${MAX} flutter_project/lib/main%i.dart
@@ -15,12 +17,9 @@ function compile() {
   pushd flutter_project
   echo $N methods
   flutter clean > /dev/null
-  flutter build aot --release -t lib/main${N}.dart \
-          --target-platform ios                    \
-          --ios-arch arm64                         \
+  flutter build ios --release -t lib/main${N}.dart \
           --extra-gen-snapshot-options=$GEN_SNAPSHOT_OPTIONS >>../build${N}-$NAME.log 2>&1
-  ls -al build/aot/App.framework/App
-  lipo build/aot/App.framework/App -thin arm64 -output App-ARM64-$NAME.${N}
+  lipo build/ios/Release-iphoneos/App.framework/App -thin arm64 -output App-ARM64-$NAME.${N}
   ls -al App-ARM64-$NAME.${N}
   echo
   popd
